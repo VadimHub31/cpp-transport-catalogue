@@ -30,9 +30,9 @@ public:
 
     void AddBus(const Bus& bus_to_add);
     void AddStop(const Stop& stop_to_add);
-    const Bus* FindBus(std::string_view busname) const;
-    const Stop* FindStop(std::string_view stopname) const;
-    const BusInfo GetBusInfo(const Bus& bus) const;
+    Bus* FindBus(std::string_view busname) const;
+    Stop* FindStop(std::string_view stopname) const;
+    BusInfo GetBusInfo(const Bus& bus) const;
     std::vector<Bus*> GetStopInfo(const Stop& stop) const;
 
 private:
