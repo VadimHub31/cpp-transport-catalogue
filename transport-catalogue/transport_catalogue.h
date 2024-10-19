@@ -30,10 +30,10 @@ public:
 
     void AddBus(const Bus& bus_to_add);
     void AddStop(const Stop& stop_to_add);
-    Bus* FindBus(std::string_view busname) const;
-    Stop* FindStop(std::string_view stopname) const;
+    const Bus* FindBus(std::string_view busname) const;
+    const Stop* FindStop(std::string_view stopname) const;
     BusInfo GetBusInfo(const Bus& bus) const;
-    std::vector<Bus*> GetStopInfo(const Stop& stop) const;
+    const std::vector<Bus*> GetStopInfo(const Stop& stop) const;
 
 private:
     std::unordered_map<std::string_view, Bus*> busname_to_bus_;
