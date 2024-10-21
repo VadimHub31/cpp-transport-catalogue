@@ -41,11 +41,19 @@ const Stop* TransportCatalogue::FindStop(string_view stopname) const {
     return nullptr;
 }
 
+Stop* TransportCatalogue::FindStopNonConst(const std::string_view stopname) {
+    auto it = stopname_to_stop_.find(stopname);
+    if (it != stopname_to_stop_.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
 BusInfo TransportCatalogue::GetBusInfo(const Bus& bus) const {
     return {GetStopsNum(bus), GetUniqueStopsNum(bus), GetRouteLength(bus)};
 }
 
-const std::vector<Bus*> TransportCatalogue::GetStopInfo(const Stop& stop) const {
+std::vector<Bus*> TransportCatalogue::GetStopInfo(const Stop& stop) const {
     return stop_to_buses_.at(stopname_to_stop_.at(stop.name));
 }
 
