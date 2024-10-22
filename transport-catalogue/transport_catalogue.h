@@ -17,7 +17,7 @@ struct Stop {
 };
 struct Bus {
     std::string name;
-    std::vector<Stop*> stops;
+    std::vector<const Stop*> stops;
 };
 struct BusInfo {
     size_t stops;
@@ -32,10 +32,9 @@ public:
     void AddStop(const Stop& stop_to_add);
     const Bus* FindBus(std::string_view busname) const;
     const Stop* FindStop(std::string_view stopname) const;
-    Stop* FindStopNonConst(std::string_view stopname);
 
     BusInfo GetBusInfo(const Bus& bus) const;
-    std::vector<Bus*> GetStopInfo(const Stop& stop) const;
+    std::vector<const Bus*> GetStopInfo(const Stop& stop) const;
 
 private:
     std::unordered_map<std::string_view, Bus*> busname_to_bus_;
@@ -44,7 +43,7 @@ private:
     std::unordered_map<std::string_view, Stop*> stopname_to_stop_;
     std::deque<Stop> stops_;
 
-    std::unordered_map<Stop*, std::vector<Bus*>> stop_to_buses_;
+    std::unordered_map<const Stop*, std::vector<const Bus*>> stop_to_buses_;
 };
 
 inline size_t GetStopsNum(const Bus& bus) {
@@ -52,7 +51,7 @@ inline size_t GetStopsNum(const Bus& bus) {
 }
 
 inline size_t GetUniqueStopsNum(const Bus& bus) {
-    std::unordered_set<Stop*> unique_stops;
+    std::unordered_set<const Stop*> unique_stops;
     for (const auto stop : bus.stops) {
         unique_stops.insert(stop);
     }
