@@ -41,7 +41,7 @@ void ParseAndPrintStat(const TransportCatalogue& transport_catalogue, std::strin
             output << "buses"s;
 
             std::set<std::string> sorted_info;
-            for (TransportCatalogue::Bus* bus : stop_info) {
+            for (const Bus* bus : stop_info) {
                 sorted_info.insert(bus->name);
             }
             for (const auto& bus : sorted_info) {
