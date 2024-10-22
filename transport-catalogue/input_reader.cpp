@@ -121,14 +121,15 @@ void InputReader::ApplyCommands([[maybe_unused]] TransportCatalogue& catalogue) 
         }
     }
     
-    for (const auto& bus_command : bus_commands) {
-        std::vector<Stop*> stops; 
-        
-        for (const auto& stop : ParseRoute(bus_command.description)) {
-            stops.push_back(catalogue.FindStopNonConst(stop));
-        }
-        catalogue.AddBus({bus_command.id, stops});
-    }
+    for (const auto& bus_command : bus_commands) { 
+        std::vector<const Stop*> stops;  
+
+        for (const auto& stop : ParseRoute(bus_command.description)) { 
+            auto stop_to_add = catalogue.FindStop(stop); 
+            stops.push_back(stop_to_add); 
+        } 
+        catalogue.AddBus({bus_command.id, stops}); 
+    } 
 }
 
 }
