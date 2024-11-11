@@ -23,8 +23,10 @@ void ParseAndPrintStat(const TransportCatalogue& transport_catalogue, std::strin
             return;
         }
         const auto bus_info = transport_catalogue.GetBusInfo(*request_bus);
-        output << std::setprecision(6) << std::to_string(bus_info.stops) << " stops on route, "s << std::to_string(bus_info.unique_stops) 
-            << " unique stops, "s << std::to_string(bus_info.route_length) << " route length\n"s;
+        output << std::setprecision(5) << std::to_string(bus_info.stops) << " stops on route, "s 
+               << std::to_string(bus_info.unique_stops) << " unique stops, "s 
+               << std::to_string(bus_info.route_length) << " route length, "s 
+               << std::to_string(bus_info.curvature) << " curvature\n"s;
     }
     else {
         auto request_stop = transport_catalogue.FindStop(request_id);
