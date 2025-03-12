@@ -41,16 +41,16 @@ const Stop* TransportCatalogue::FindStop(string_view stopname) const {
     return nullptr;
 }
 
-void TransportCatalogue::SetStopsDistance(std::pair<const Stop*, const Stop*> stops, int distance) {
-    stops_to_distance_[stops] = distance;
+void TransportCatalogue::SetStopsDistance(const Stop* from, const Stop* to, int distance) {
+    stops_to_distance_[{from, to}] = distance;
 }
 
-int TransportCatalogue::GetStopsDistance(std::pair<const Stop*, const Stop*> stops) const {
-    auto it = stops_to_distance_.find(stops);
+int TransportCatalogue::GetStopsDistance(const Stop* from, const Stop* to) const {
+    auto it = stops_to_distance_.find({from, to});
     if (it != stops_to_distance_.end()) {
         return it->second;
     }
-    return GetStopsDistance({stops.second, stops.first});
+    return GetStopsDistance(to, from);
 }
 
 BusInfo TransportCatalogue::GetBusInfo(const Bus& bus) const {
@@ -59,6 +59,11 @@ BusInfo TransportCatalogue::GetBusInfo(const Bus& bus) const {
 
 std::vector<const Bus*> TransportCatalogue::GetStopInfo(const Stop& stop) const {
     return stop_to_buses_.at(stopname_to_stop_.at(stop.name));
+}
+
+const map<string_view, Bus*>* TransportCatalogue::GetBuses() const {
+    auto buses_list_ptr = &busname_to_bus_;
+    return buses_list_ptr;
 }
 
 }

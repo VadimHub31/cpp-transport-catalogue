@@ -1,34 +1,35 @@
+#include "json_reader.h"
+#include "request_handler.h"
+#include "map_renderer.h"
+
 #include <iostream>
-#include <string>
+#include <fstream>
 
-#include "input_reader.h"
-#include "stat_reader.h"
-
-using namespace std;
 using namespace transport_catalogue;
-using namespace detail;
+using namespace std;
 
 int main() {
-    TransportCatalogue catalogue;
+    TransportCatalogue transport_catalogue;
+    MapRenderer map_renderer;
+    RequestHandler request_handler(transport_catalogue, map_renderer);  
 
-    int base_request_count;
-    cin >> base_request_count >> ws;
+    std::ifstream file("input.txt");
 
-    {
-        InputReader reader;
-        for (int i = 0; i < base_request_count; ++i) {
-            string line;
-            getline(cin, line);
-            reader.ParseLine(line);
-        }
-        reader.ApplyCommands(catalogue);
+    // Проверяем, удалось ли открыть файл
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл!" << std::endl;
+        return 1;
     }
 
-    int stat_request_count;
-    cin >> stat_request_count >> ws;
-    for (int i = 0; i < stat_request_count; ++i) {
-        string line;
-        getline(cin, line);
-        ParseAndPrintStat(catalogue, line, cout);
+    std::ofstream out("output.txt");
+
+    if (!out.is_open()) {
+        std::cerr << "Не удалось открыть файл!" << std::endl;
+        return 1;
     }
+
+    JsonReader reader(file);
+    reader.ApplyCommands(transport_catalogue, map_renderer);
+    //request_handler.RenderMap().Render(out);
+    reader.PrintJson(request_handler, out);
 }

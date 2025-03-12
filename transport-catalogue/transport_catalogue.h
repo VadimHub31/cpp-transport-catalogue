@@ -1,8 +1,9 @@
 #pragma once
 
-#include "geo.h"
+#include "domain.h"
 
 #include <deque>
+#include <map>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -11,21 +12,6 @@
 #include <vector>
 
 namespace transport_catalogue {
-
-struct Stop {
-    std::string name;
-    Coordinates coordinates;
-};
-struct Bus {
-    std::string name;
-    std::vector<const Stop*> stops;
-};
-struct BusInfo {
-    size_t stops;
-    size_t unique_stops;
-    int route_length;
-    double curvature;
-};
 
 struct StopsHasher {
     std::size_t operator() (std::pair<const Stop*, const Stop*> stops) const {
@@ -46,14 +32,16 @@ public:
     const Bus* FindBus(std::string_view busname) const;
     const Stop* FindStop(std::string_view stopname) const;
     
-    void SetStopsDistance(std::pair<const Stop*, const Stop*> stops, int distance);
-    int GetStopsDistance(std::pair<const Stop*, const Stop*> stops) const;
+    void SetStopsDistance(const Stop* from, const Stop* to, int distance);
+    int GetStopsDistance(const Stop* from, const Stop* to) const;
 
     BusInfo GetBusInfo(const Bus& bus) const;
     std::vector<const Bus*> GetStopInfo(const Stop& stop) const;
 
+    const std::map<std::string_view, Bus*>* GetBuses() const;
+
 private:
-    std::unordered_map<std::string_view, Bus*> busname_to_bus_;
+    std::map<std::string_view, Bus*> busname_to_bus_;
     std::deque<Bus> buses_;
 
     std::unordered_map<std::string_view, Stop*> stopname_to_stop_;
@@ -78,7 +66,7 @@ private:
     int GetRouteLength(const Bus& bus) const {
         int result = 0;
         for (size_t i = 1; i != bus.stops.size(); ++i) {
-            result += GetStopsDistance({bus.stops[i], bus.stops[i - 1]});
+            result += GetStopsDistance(bus.stops[i - 1], bus.stops[i]);
         }
         return result;
     }
