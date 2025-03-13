@@ -15,6 +15,10 @@ MapRenderer& MapRenderer::SetRenderSettings(RenderSettings& render_settings) {
 
 Document MapRenderer::Render(const map<string_view, Bus*>* bus_list) const {
     Document document;
+    if (!bus_list) {
+        return document;
+    }
+    
     auto comp = [](const Stop* stop_lhs, const Stop* stop_rhs) {
         return stop_lhs->name < stop_rhs->name;
     };
