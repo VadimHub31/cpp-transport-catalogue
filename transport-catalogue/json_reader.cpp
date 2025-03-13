@@ -55,22 +55,21 @@ void JsonReader::ApplyCommands(TransportCatalogue& transport_catalogue, MapRende
 void JsonReader::PrintJson(RequestHandler& request_handler, ostream& output) const {
     Array infos;
     for (const auto& stat_command : *stat_commands_) {
-        auto sc = stat_command.AsMap();
         Dict info;
-        if (sc.at("type"s) == "Stop"s) {
+        if (stat_command.AsMap().at("type"s) == "Stop"s) {
             
-            if (!request_handler.GetBusesByStop(sc.at("name"s).AsString()).has_value()) {
+            if (!request_handler.GetBusesByStop(stat_command.AsMap().at("name"s).AsString()).has_value()) {
                 info.insert({"error_message"s, string{"not found"s}});
-                info.insert({"request_id"s, sc.at("id"s)});
+                info.insert({"request_id"s, stat_command.AsMap().at("id"s)});
                 infos.push_back(info);
                 continue;
             }
             
-            vector<const Bus*> buses = *request_handler.GetBusesByStop(sc.at("name"s).AsString());
+            vector<const Bus*> buses = *request_handler.GetBusesByStop(stat_command.AsMap().at("name"s).AsString());
             
             if (!buses.size()) {
                 info.insert({"buses"s, Array{}});
-                info.insert({"request_id"s, sc.at("id"s)});
+                info.insert({"request_id"s, stat_command.AsMap().at("id"s)});
             }
             else {
                 sort(buses.begin(), buses.end(), [](const Bus* lhs, const Bus* rhs) {
@@ -81,21 +80,21 @@ void JsonReader::PrintJson(RequestHandler& request_handler, ostream& output) con
                     buses_names.push_back(bus->name);
                 }
                 info.insert({"buses"s, buses_names});
-                info.insert({"request_id"s, sc.at("id"s)});
+                info.insert({"request_id"s, stat_command.AsMap().at("id"s)});
             }
             if (!info.empty()) {
                 infos.push_back(info);
             }
         }
-        else if (sc.at("type"s) == "Bus"s) {
-            auto bus_info = *request_handler.GetBusStat(sc.at("name"s).AsString());
-            if (!request_handler.GetBusStat(sc.at("name"s).AsString()).has_value()) {
+        else if (stat_command.AsMap().at("type"s) == "Bus"s) {
+            auto bus_info = *request_handler.GetBusStat(stat_command.AsMap().at("name"s).AsString());
+            if (!request_handler.GetBusStat(stat_command.AsMap().at("name"s).AsString()).has_value()) {
                 info.insert({"error_message"s, string{"not found"s}});
-                info.insert({"request_id"s, sc.at("id")});
+                info.insert({"request_id"s, stat_command.AsMap().at("id")});
             }
             else {
                 info.insert({"curvature"s, bus_info.curvature});
-                info.insert({"request_id"s, sc.at("id"s)});
+                info.insert({"request_id"s, stat_command.AsMap().at("id"s)});
                 info.insert({"route_length"s, bus_info.route_length});
                 info.insert({"stop_count"s, static_cast<int>(bus_info.stops)});
                 info.insert({"unique_stop_count"s, static_cast<int>(bus_info.unique_stops)});
@@ -108,7 +107,7 @@ void JsonReader::PrintJson(RequestHandler& request_handler, ostream& output) con
             ostringstream map;
             request_handler.RenderMap().Render(map);
             info.insert({"map"s, map.str()});
-            info.insert({"request_id"s, sc.at("id")});
+            info.insert({"request_id"s, stat_command.AsMap().at("id")});
 
             if (!info.empty()) {
                 infos.push_back(info);
