@@ -11,7 +11,7 @@
 
 class JsonReader {
 public:
-    JsonReader(std::istream& input);
+    explicit JsonReader(std::istream& input);
 
     void ApplyCommands(transport_catalogue::TransportCatalogue& transport_catalogue, MapRenderer& map_renderer) const;
     
