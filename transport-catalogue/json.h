@@ -22,26 +22,10 @@ public:
     using Value = std::variant<std::nullptr_t, Array, Dict, bool, int, double, std::string>;
 
     Node() = default;
-    Node(std::nullptr_t)
-        : value_(nullptr) {
-    }
-    Node(int val)
-        : value_(val) {
-    }
-    Node(double val)
-        : value_(val) {
-    }
-    Node(std::string val)
-        : value_(std::move(val)) {
-    }
-    Node(Array val)
-        : value_(std::move(val)) {
-    }
-    Node(Dict val)
-        : value_(std::move(val)) {
-    }
-    Node(bool val)
-        : value_(val) {
+
+    template <typename ValueType>
+    Node(ValueType value)
+        :value_(std::move(value)) {
     }
 
     bool IsInt() const {
