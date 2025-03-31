@@ -13,23 +13,23 @@ int main() {
     MapRenderer map_renderer;
     RequestHandler request_handler(transport_catalogue, map_renderer);  
 
-    std::ifstream file("input.txt");
+    // std::ifstream file("input.txt");
 
-    // Проверяем, удалось ли открыть файл
-    if (!file.is_open()) {
-        std::cerr << "Не удалось открыть файл!" << std::endl;
-        return 1;
-    }
+    // // Проверяем, удалось ли открыть файл
+    // if (!file.is_open()) {
+    //     std::cerr << "Не удалось открыть файл!" << std::endl;
+    //     return 1;
+    // }
 
-    std::ofstream out("output.txt");
+    // std::ofstream out("output.txt");
 
-    if (!out.is_open()) {
-        std::cerr << "Не удалось открыть файл!" << std::endl;
-        return 1;
-    }
+    // if (!out.is_open()) {
+    //     std::cerr << "Не удалось открыть файл!" << std::endl;
+    //     return 1;
+    // }
 
-    JsonReader reader(file);
+    JsonReader reader(cin);
     reader.ApplyCommands(transport_catalogue, map_renderer);
     //request_handler.RenderMap().Render(out);
-    reader.PrintJson(request_handler, out);
+    reader.PrintJson(request_handler, cout);
 }
