@@ -29,7 +29,7 @@ private:
     Node root_;
     std::vector<Node*> nodes_stack_;
     const Node* GetCurrentNode() const;
-    void AddNode(Node node);
+    void AddNode(Node node, bool one_shot);
 
     std::optional<std::string> last_key_;
 
