@@ -8,7 +8,7 @@ using namespace std;
 namespace json {
 
 Builder& Builder::Value(Node value) {
-    AddNode(move(value));
+    AddNode(move(value), true);
     return *this;
 }
 
@@ -27,7 +27,7 @@ Builder::KeyContext Builder::Key(string key) {
 }
 
 Builder::DictItemContext Builder::StartDict() {
-    AddNode(Dict{});
+    AddNode(Dict{}, false);
     return DictItemContext(*this);
 }
 
@@ -40,7 +40,7 @@ Builder& Builder::EndDict() {
 }
 
 Builder::ArrayItemContext Builder::StartArray() {
-    AddNode(Array{});
+    AddNode(Array{}, false);
     return ArrayItemContext(*this);
 }
 
@@ -66,10 +66,10 @@ const Node* Builder::GetCurrentNode() const {
     return nodes_stack_.back();
 }
 
-void Builder::AddNode(Node node) {
+void Builder::AddNode(Node node, bool one_shot) {
     if (root_.IsNull()/* && nodes_stack_.empty()*/) {
         root_ = move(node);
-        if (root_.IsArray() || root_.IsDict()) {
+        if (!one_shot) {
             nodes_stack_.push_back(&root_);
         }
         return;
@@ -83,7 +83,7 @@ void Builder::AddNode(Node node) {
         Array& current_node = const_cast<Array&>(GetCurrentNode()->AsArray());
         current_node.emplace_back(move(node));
         Node* added = &current_node.back();
-        if (added->IsArray() || added->IsDict()) {
+        if (!one_shot) {
             nodes_stack_.push_back(added);
         }
     }
@@ -101,7 +101,7 @@ void Builder::AddNode(Node node) {
 
         Node* added = &it->second;
         last_key_.reset();
-        if (added->IsArray() || added->IsDict()) {
+        if (!one_shot) {
             nodes_stack_.push_back(added);
         }
     }
