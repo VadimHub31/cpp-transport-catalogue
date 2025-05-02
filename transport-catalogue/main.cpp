@@ -11,25 +11,24 @@ using namespace std;
 int main() {
     TransportCatalogue transport_catalogue;
     MapRenderer map_renderer;
-    RequestHandler request_handler(transport_catalogue, map_renderer);  
+    TransportRouter router(transport_catalogue);
+    RequestHandler request_handler(transport_catalogue, map_renderer, router);  
 
-    // std::ifstream file("input.txt");
+    std::ifstream file("input.txt");
 
-    // // Проверяем, удалось ли открыть файл
-    // if (!file.is_open()) {
-    //     std::cerr << "Не удалось открыть файл!" << std::endl;
-    //     return 1;
-    // }
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл!" << std::endl;
+        return 1;
+    }
 
-    // std::ofstream out("output.txt");
+    std::ofstream out("output.txt");
 
-    // if (!out.is_open()) {
-    //     std::cerr << "Не удалось открыть файл!" << std::endl;
-    //     return 1;
-    // }
+    if (!out.is_open()) {
+        std::cerr << "Не удалось открыть файл!" << std::endl;
+        return 1;
+    }
 
-    JsonReader reader(cin);
-    reader.ApplyCommands(transport_catalogue, map_renderer);
-    //request_handler.RenderMap().Render(out);
-    reader.PrintJson(request_handler, cout);
+    JsonReader reader(file);
+    reader.ApplyCommands(transport_catalogue, map_renderer, router);
+    reader.PrintJson(request_handler, out);
 }

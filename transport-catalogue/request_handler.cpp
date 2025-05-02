@@ -30,3 +30,7 @@ const optional<vector<const Bus*>> RequestHandler::GetBusesByStop(const string_v
 Document RequestHandler::RenderMap() const {
     return renderer_.Render(db_.GetBuses());
 }
+
+std::optional<RouteItem> RequestHandler::GetRouteInfo(const std::string_view from, const std::string_view to) const {
+    return router_.GetRouteStat(db_.FindStop(from), db_.FindStop(to));
+}

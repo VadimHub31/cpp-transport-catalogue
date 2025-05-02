@@ -66,4 +66,8 @@ const map<string_view, Bus*>* TransportCatalogue::GetBuses() const {
     return buses_list_ptr;
 }
 
+const deque<Stop>& TransportCatalogue::GetStops() const {
+    return stops_;
+}
+
 }

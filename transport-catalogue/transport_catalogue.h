@@ -39,6 +39,7 @@ public:
     std::vector<const Bus*> GetStopInfo(const Stop& stop) const;
 
     const std::map<std::string_view, Bus*>* GetBuses() const;
+    const std::deque<Stop>& GetStops() const;
 
 private:
     std::map<std::string_view, Bus*> busname_to_bus_;
